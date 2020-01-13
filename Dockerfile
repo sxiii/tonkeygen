@@ -23,12 +23,7 @@ RUN cd Libraries && git clone git://code.qt.io/qt/qt5.git qt5_6_2 && cd qt5_6_2 
 RUN cd Libraries && git clone https://chromium.googlesource.com/external/gyp && cd gyp && git checkout 9f2a7bb1 && git apply ../patches/gyp.diff && cd ..
 RUN cd Libraries && git clone https://github.com/ton-blockchain/ton.git && cd ton && git checkout ecb3e06a06 && git submodule init && git submodule update third-party/crc32c && mkdir build-debug && cd build-debug && cmake -DTON_USE_ROCKSDB=OFF -DTON_USE_ABSEIL=OFF -DTON_ONLY_TONLIB=ON -DOPENSSL_FOUND=1 -DOPENSSL_INCLUDE_DIR=/usr/local/include -DOPENSSL_CRYPTO_LIBRARY=/usr/local/ssl/lib/libcrypto.a -DZLIB_FOUND=1 -DZLIB_INCLUDE_DIR=/usr/local/include -DZLIB_LIBRARIES=/usr/local/lib/libz.a -DTON_ARCH=`uname -m | sed --expression='s/_/-/g'` .. && make -j8 tonlib && cd .. && mkdir build && cd build && cmake -DTON_USE_ROCKSDB=OFF -DTON_USE_ABSEIL=OFF -DTON_ONLY_TONLIB=ON -DOPENSSL_FOUND=1 -DOPENSSL_INCLUDE_DIR=/usr/local/include -DOPENSSL_CRYPTO_LIBRARY=/usr/local/ssl/lib/libcrypto.a -DZLIB_FOUND=1 -DZLIB_INCLUDE_DIR=/usr/local/include -DZLIB_LIBRARIES=/usr/local/lib/libz.a -DTON_ARCH=`uname -m | sed --expression='s/_/-/g'` -DCMAKE_BUILD_TYPE=Release .. && make $MAKE_THREADS_CNT tonlib
 
-#RUN /bin/bash
-
 RUN cd /tonkeygen/Keygen && gyp/refresh.sh
-
-#RUN ls /gyp/
-#RUN cd / && ./gyp/refresh.sh
 
 RUN cd tonkeygen/out/Release && make -j8
 ENTRYPOINT /bin/bash
